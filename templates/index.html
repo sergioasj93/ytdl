@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Download de Vídeos do YouTube</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1>Download de Vídeos do YouTube</h1>
+        <form method="POST">
+            {{ form.hidden_tag() }}
+            <div class="form-group">
+                <label for="video_url">Cole o link do vídeo do YouTube abaixo:</label>
+                <input type="text" class="form-control" id="video_url" name="video_url" placeholder="Ex: https://www.youtube.com/watch?v=VIDEO_ID">
+            </div>
+            <button type="submit" class="btn btn-primary">Enviar</button>
+        </form>
+
+        {% if video_info %}
+        <hr>
+        <div class="video-info">
+            <h2>{{ video_info.title }}</h2>
+            <p>Autor: {{ video_info.author }}</p>
+            <img src="{{ video_info.thumbnail_url }}" alt="Thumbnail do vídeo">
+        </div>
+
+        <h2>Qualidade Disponível</h2>
+        <ul class="list-group">
+            {% for stream in video_streams %}
+            <li class="list-group-item">
+                <a href="{{ url_for('download', video_url=stream.url) }}">{{ stream.resolution }} ({{ stream.mime_type }})</a>
+            </li>
+            {% endfor %}
+        </ul>
+        {% endif %}
+
+        {% if download_link %}
+        <hr>
+        <h2>Download Concluído</h2>
+        <p>O vídeo foi baixado com sucesso! <a href="{{ url_for('static', filename=download_link) }}">Clique aqui para baixar</a>.</p>
+        {% endif %}
+    </div>
+</body>
+</html>
